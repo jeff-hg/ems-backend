@@ -1,12 +1,15 @@
 package io.github.jeff_hg.ems.controller;
 
 import io.github.jeff_hg.ems.dto.EmployeeDto;
+import io.github.jeff_hg.ems.entity.Employee;
 import io.github.jeff_hg.ems.service.EmployeeService;
 import lombok.AllArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @RestController
@@ -29,5 +32,26 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> getEmployee(@PathVariable("id") Long employeeId) {
         EmployeeDto employeeDto = employeeService.getEmployeeById(employeeId);
         return ResponseEntity.ok(employeeDto);
+    }
+
+    // Get ALL Employees REST API
+    @GetMapping
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
+        List<EmployeeDto> employees = employeeService.getAllEmployees();
+        return ResponseEntity.ok(employees);
+    }
+
+    // Update Employee REST API
+    @PutMapping("{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") Long employeeId,
+                                                      @RequestBody EmployeeDto employeeDto) {
+        EmployeeDto updatedEmployeeDto = employeeService.updateEmployee(employeeId, employeeDto);
+        return ResponseEntity.ok(updatedEmployeeDto);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable("id") Long employeeId) {
+        employeeService.deleteEmployee(employeeId);
+        return ResponseEntity.ok(String.format("Employee with id: %d removed successfully", employeeId));
     }
 }
